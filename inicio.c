@@ -21,6 +21,7 @@ int main() {
     if(externo!=nil) {
       printf("\n  2 - Inserir materia");
       printf("\n  3 - Inserir nota");
+      printf("\n  4 - Mostrar todos");
     }
     printf("\n  0 - Sair");
     printf("\n>>");
@@ -35,6 +36,9 @@ int main() {
 
     }
     else if(choice==3 and externo!=nil) {
+
+    }
+    else if(choice==4 and externo!=nil) {
 
     }
     else if(choice==0) {
@@ -60,7 +64,7 @@ void iniciar_head() {
 void inserir_aluno() {
   aluno * aux, * creat;
   char name[NAMESIZE];
-  unsigned int mat;
+  unsigned int mat, choice;
 
   aux=externo;
 
@@ -70,31 +74,55 @@ void inserir_aluno() {
   scanf("%i", &mat);
 
   if(externo==nil) {
-    externo=malloc(sizeof(aluno));
-    externo->proximo=(struct Sheader *) malloc(sizeof(head));
-    externo->proximo=cabeca;
-    externo->matricula=151047000 + (mat%1000);
-    strcpy(externo->nome, name);
-    externo->anterior=(struct Sheader *) malloc(sizeof(head));
-    externo->anterior=cabeca;
-    externo->turma=malloc(sizeof(materia));
-    externo->turma=nil;
-    cabeca->proximo=externo;
-    cabeca->ultimo=externo;
+    aux=malloc(sizeof(aluno));
+    aux->proximo=(struct Sheader *) malloc(sizeof(head));
+    aux->proximo=cabeca;
+    aux->matricula=151047000 + (mat%1000);
+    strcpy(aux->nome, name);
+    aux->anterior=(struct Sheader *) malloc(sizeof(head));
+    aux->anterior=cabeca;
+    aux->turma=malloc(sizeof(materia));
+    aux->turma=nil;
+    cabeca->proximo=aux;
+    cabeca->ultimo=aux;
+    externo=aux;
   }
   else {
-    creat=malloc(sizeof(aluno));
-    aux->proximo=creat;
-    creat->anterior=aux;
-    cabeca->ultimo=creat;
+    aux=cabeca->ultimo;
+    if(aux->anterior==cabeca) {
+      creat=malloc(sizeof(aluno));
+      aux->proximo=creat;
+      creat->anterior=(struct Sheader *) malloc(sizeof(head));
+      creat->anterior=aux;
+      creat->proximo=(struct Sheader *) malloc(sizeof(head));
+      creat->proximo=cabeca;
+      cabeca->ultimo=creat;
+      creat->turma=nil;
+      creat->matricula=151047000 + (mat%1000);
+      strcpy(creat->nome, name);
+      aux->proximo=creat;
+    }
+    else {
+      creat=malloc(sizeof(aluno));
+      aux->proximo=creat;
+      creat->anterior=(struct Saluno *) malloc(sizeof(aluno));
+      creat->anterior=aux;
+      creat->proximo=(struct Saluno *) malloc(sizeof(aluno));
+      creat->proximo=cabeca;
+      cabeca->ultimo=creat;
+      creat->turma=nil;
+      creat->matricula=151047000 + (mat%1000);
+      strcpy(creat->nome, name);
+      aux->proximo=creat;
+    }
+    aux=aux->proximo;
   }
-
   cabeca->quant+=1;
-  printf("\nEspaco alocado: %p\nNome: %s\nMatricula: %i\n", externo, externo->nome, externo->matricula);
-  printf("\nO aluno foi criado com sucesso deseja iniciar uma materia?\n1 - Sim\n2 - Nao\nResp: ");
-  scanf("%i", &mat);
+  printf("\nEspaco alocado: %p\nNome: %s\nMatricula: %i\n", aux, aux->nome, aux->matricula);
+  printf("\nO aluno foi criado com sucesso deseja iniciar uma materia?\n1 - Sim\n0 - Nao\nResp: ");
+  scanf("%d", &choice);
 
-  switch (mat) {
+  switch (choice) {
     case 1:
       //iniciar_materia(aux);
     case 0:
