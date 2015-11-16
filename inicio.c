@@ -8,7 +8,7 @@ int main() {
 
   iniciar_head();
   while(true) {
-
+    
     printf("\nDiga o que deseja fazer:");
     printf("\n  1 - Inserir aluno");
     if(externo!=nil) {

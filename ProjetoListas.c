@@ -1,3 +1,9 @@
+/*
+ Esse projeto foi feito por
+  Joao Marcus Fernandes
+  Leticia Almeida
+ * */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -67,6 +73,9 @@ int main() {
     if(choice==1) {
       inserir_aluno();
     }
+
+    //Se a lista for nula, o que tiver abaixo até o sair sera ocultado e inacessivel
+
     else if(choice==2 && lista!=NULL) {
       buscador = buscar();
       deletar_aluno(buscador);
@@ -89,6 +98,9 @@ int main() {
       break;
     }
     else {
+      //
+      //Teste a prova de usuario teimoso
+      //
       printf("\n\n     ERRO!\nOpcao invalida ou funcao indisponivel no momento.\n\n");
     }
   }
@@ -97,6 +109,13 @@ int main() {
 //                   FUNCOES
 
 void iniciar_head() {
+  
+  /*
+     *Head sera iniciada com direcionais nulos
+      quantidade zerada
+      e matriculas em seus apices
+     * */
+
     cabeca=malloc(sizeof(head));
     cabeca->quantidade=0;
     cabeca->proximo=NULL;
@@ -118,6 +137,11 @@ void inserir_aluno() {
   mat = 151047000 + (mat%1000);
 
   if(lista==NULL) {
+    //
+    //Caso a lista seja nula, quer dizer que nao ha alunos
+    //Sendo assim, poderia ser usado diretamente lista
+    //porem por motivos pessoais isso nao foi feito
+    //
     aux=(struct Saluno *) malloc(sizeof(aluno));
     aux->proximo=(struct Sheader *) malloc(sizeof(head));
     aux->proximo=cabeca;
@@ -137,13 +161,20 @@ void inserir_aluno() {
   else {
     aux = lista;
 
+    //Auxiliar ira comecar na lista
+
     criador = malloc(sizeof(aluno));
     strcpy(criador->nome, name);
     while(aux!=cabeca) {
+      //
+      //Busca na lista para caso haja alguma matricula repetida
+      //Caso haja, a lista recomecara em sua busca
+      //
       if(aux->matricula == mat) {
         printf("Matricula ja existente diga uma nova: ");
         scanf("%i", &mat);
         mat = 151047000 + (mat%1000);
+        aux = lista; // Volta ao comeco da lista
       }
       else {
         aux=aux->proximo;
@@ -151,8 +182,13 @@ void inserir_aluno() {
     }
     criador->matricula = mat;
 
+    aux = lista;
+
+    
     if(aux->proximo == cabeca) {
+      //Lista possui apenas um elemento
       if(aux->matricula  < criador->matricula) {
+        //Para matricula do criador maior que a da lista
         criador->anterior = aux;
         aux->proximo = criador;
         criador->proximo = cabeca;
@@ -162,6 +198,7 @@ void inserir_aluno() {
         cabeca->quantidade+=1;
       }
       else {
+        //Para matricula do criador menor que a da lista
         criador->proximo = aux;
         aux->anterior = criador;
         criador->anterior = cabeca;
@@ -174,6 +211,7 @@ void inserir_aluno() {
     }
 
     else {
+      //Mais de um elemento na lista
         aux = cabeca->anterior;
         if(aux->matricula  < criador->matricula) {
           criador->anterior = aux;
@@ -188,11 +226,14 @@ void inserir_aluno() {
         else {
           while(aux->anterior != cabeca && aux->matricula  > criador->matricula) {
             aux = aux->anterior;
+            //Busca reversa
+            //Sera comparado com os elementos anterior fazendo uso do direcional para tras
           }
 
           seguraLista = aux;
 
           if(aux->anterior == cabeca && aux->matricula  > criador->matricula) {
+            //Primeiro elemento da lista e criador tendo matricula menor que a lista
             criador->proximo = seguraLista;
             criador->anterior=cabeca;
             seguraLista->anterior = criador;
@@ -200,6 +241,7 @@ void inserir_aluno() {
             criador->turma=NULL;
           }
           else {
+            //Qualquer outro elemento na lista
             aux = aux->anterior;
             criador->proximo = seguraLista;
             criador->anterior=aux;
@@ -225,13 +267,15 @@ void deletar_aluno(aluno * escolhido) {
     aux = escolhido->anterior;
     seguraLista = escolhido->proximo;
 
-    if(aux == seguraLista) { // Quer dizer que esse era o unico integrante da lista
+    if(aux == seguraLista) { 
+      // Quer dizer que esse era o unico integrante da lista
       iniciar_head();
       lista = NULL;
       return;
     }
 
     if(lista == escolhido) {
+      //Escolhido e o primeiro elemento da lista
       lista=lista->proximo;
     }
 
@@ -259,16 +303,19 @@ void inserir_materia(aluno * escolhido) {
   		scanf("%d", &choice);
 
   		if(choice==1) {
+        //Caso nao haja o aluno sera dado a chance de inseri-lo
     		inserir_aluno();
   		}
 	}
   else {
     if(escolhido->turma == NULL) {
+      //Nao existe ainda nenhuma turma que o aluno esteja matriculado
       escolhido->turma=malloc(sizeof(materia));
     }
     aux=escolhido->turma;
 
     while(aux->proximo!=NULL) {
+      //Percorre ate que a lista em busca do fim da mesma
       aux = aux->proximo;
     }
     printf("\nDiga o nome da materia: ");
@@ -285,7 +332,7 @@ void inserir_materia(aluno * escolhido) {
 
     aux->notas[0]=aux->notas[0]/2;
 
-    if(aux->notas[0]=<6) {
+    if(aux->notas[0]<=6) {
       printf("\nDiga a sua nota da AVF: ");
       scanf("%f", &aux->notas[3]);
       aux->notas[0] = (aux->notas[0] + aux->notas[3])/2;
@@ -389,4 +436,7 @@ struct Saluno * buscar() {
     inserir_aluno();
   }
   return NULL;
+  /*
+   *A busca ira retornar a localizacao do aluno se exister ou nulo caso nao haja aluno com esssa matricula
+   * */
 }
