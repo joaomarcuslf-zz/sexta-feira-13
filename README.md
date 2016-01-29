@@ -2,3 +2,5 @@
 ###Trabalho de AL2
 
 **Lista duplacamente encadeada circular, com cabeça e ligada a uma simplesmente encadeada**
+
+*Finalizado dia 16 de Novembro*
